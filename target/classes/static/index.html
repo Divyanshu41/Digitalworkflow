@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Approval Workflow - Login</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="container auth-container">
+    <section class="card">
+        <h1>Digital Approval Workflow</h1>
+        <p class="muted">Sign in to continue</p>
+
+        <form id="loginForm" class="form-grid">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="••••••••" required>
+
+            <button type="submit">Login</button>
+            <p id="loginError" class="error" hidden></p>
+        </form>
+
+        <hr class="divider">
+
+        <h2>Create New Account</h2>
+        <form id="registerForm" class="form-grid">
+            <label for="firstName">First Name</label>
+            <input id="firstName" name="firstName" type="text" maxlength="100" required>
+
+            <label for="lastName">Last Name</label>
+            <input id="lastName" name="lastName" type="text" maxlength="100">
+
+            <label for="registerEmail">Email</label>
+            <input id="registerEmail" name="registerEmail" type="email" maxlength="150" required>
+
+            <label for="registerPassword">Password</label>
+            <input id="registerPassword" name="registerPassword" type="password" minlength="6" maxlength="100" required>
+
+            <button type="submit">Register</button>
+            <p id="registerSuccess" class="success" hidden></p>
+            <p id="registerError" class="error" hidden></p>
+        </form>
+    </section>
+</main>
+<script src="/script.js"></script>
+</body>
+</html>

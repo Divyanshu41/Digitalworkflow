@@ -22,18 +22,22 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
 
+    public RequestService(RequestRepository requestRepository, UserRepository userRepository) {
+        this.requestRepository = requestRepository;
+        this.userRepository = userRepository;
+    }
+
     @Transactional
     public RequestResponseDto createRequest(RequestCreateDto requestDto) {
         User user = userRepository.findById(requestDto.userId())
             .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + requestDto.userId()));
 
-        Request request = Request.builder()
-            .user(user)
-            .title(requestDto.title())
-            .description(requestDto.description())
-            .status("PENDING")
-            .submittedAt(LocalDateTime.now())
-            .build();
+        Request request = new Request();
+        request.setUser(user);
+        request.setTitle(requestDto.title());
+        request.setDescription(requestDto.description());
+        request.setStatus("PENDING");
+        request.setSubmittedAt(LocalDateTime.now());
 
         Request savedRequest = requestRepository.save(request);
         return mapToResponse(savedRequest);

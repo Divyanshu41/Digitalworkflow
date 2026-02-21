@@ -28,6 +28,10 @@ public class RequestController {
 
     private final RequestService requestService;
 
+    public RequestController(RequestService requestService) {
+        this.requestService = requestService;
+    }
+
     @PostMapping
     public ResponseEntity<RequestResponseDto> createRequest(@Valid @RequestBody RequestCreateDto requestDto) {
         RequestResponseDto createdRequest = requestService.createRequest(requestDto);

@@ -48,4 +48,16 @@ public class Role {
     @Builder.Default
     @OneToMany(mappedBy = "role")
     private List<User> users = new ArrayList<>();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

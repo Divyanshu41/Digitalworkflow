@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Approval Workflow - Login</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<main>
+    <h1>Digital Approval Workflow System</h1>
+    <form id="login-form">
+        <label>
+            Email
+            <input type="email" id="email" name="email" required placeholder="you@example.com">
+        </label>
+        <label>
+            Password
+            <input type="password" id="password" name="password" required placeholder="••••••••">
+        </label>
+        <button type="submit">Sign In</button>
+        <p id="login-error" class="error-message" hidden></p>
+    </form>
+</main>
+<script src="/js/app.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.getElementById('login-form');
+        const errorMessage = document.getElementById('login-error');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            errorMessage.hidden = true;
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const credentialsValid = await window.App.login(email, password);
+                if (credentialsValid) {
+                    window.location.href = '/dashboard.html';
+                }
+            } catch (error) {
+                errorMessage.textContent = error.message || 'Login failed. Please try again.';
+                errorMessage.hidden = false;
+            }
+        });
+    });
+</script>
+</body>
+</html>
