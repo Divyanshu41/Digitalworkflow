@@ -35,7 +35,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authenticationProvider(authenticationProvider)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/index.html", "/login.html", "/dashboard.html", "/style.css", "/script.js", "/css/**", "/js/**", "/error", "/favicon.ico").permitAll()
+                .requestMatchers("/", "/index.html", "/login.html", "/register.html", "/dashboard.html", "/style.css", "/script.js", "/css/**", "/js/**", "/error", "/favicon.ico").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                 .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
                 .requestMatchers(HttpMethod.POST, "/requests").hasRole("USER")

@@ -1,8 +1,10 @@
 (() => {
     const STORAGE_KEY = 'daws_credentials';
 
-    const isDashboard = window.location.pathname.endsWith('/dashboard.html');
-    const isLogin = window.location.pathname === '/' || window.location.pathname.endsWith('/index.html');
+    const path = window.location.pathname;
+    const isDashboard = path.endsWith('/dashboard.html');
+    const isLogin = path === '/' || path.endsWith('/index.html');
+    const isRegister = path.endsWith('/register.html');
 
     const saveCredentials = (email, password) => {
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ email, password }));
@@ -101,7 +103,6 @@
         const errorBox = document.getElementById('loginError');
         const registerSuccess = document.getElementById('registerSuccess');
         const registerError = document.getElementById('registerError');
-
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
             errorBox.hidden = true;
@@ -121,6 +122,39 @@
         });
 
         registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            registerSuccess.hidden = true;
+            registerError.hidden = true;
+
+            const payload = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('registerEmail').value.trim(),
+                password: document.getElementById('registerPassword').value
+            };
+
+            try {
+                const response = await publicApi('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                registerForm.reset();
+                registerSuccess.textContent = response?.message || 'Registration successful. Please login.';
+                registerSuccess.hidden = false;
+            } catch (error) {
+                registerError.textContent = error.message || 'Registration failed';
+                registerError.hidden = false;
+            }
+        });
+    };
+
+    const setupRegisterOnly = () => {
+        const registerForm = document.getElementById('registerForm');
+        const registerSuccess = document.getElementById('registerSuccess');
+        const registerError = document.getElementById('registerError');
+
+        registerForm?.addEventListener('submit', async (event) => {
             event.preventDefault();
             registerSuccess.hidden = true;
             registerError.hidden = true;
@@ -315,6 +349,10 @@
     document.addEventListener('DOMContentLoaded', async () => {
         if (isLogin) {
             setupLogin();
+            return;
+        }
+        if (isRegister) {
+            setupRegisterOnly();
             return;
         }
         if (isDashboard) {

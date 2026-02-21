@@ -8,41 +8,28 @@
 </head>
 <body>
 <main class="container auth-container">
-    <section class="card">
-        <h1>Digital Approval Workflow</h1>
-        <p class="muted">Sign in to continue</p>
+    <section class="auth-stack">
+        <article class="card auth-panel">
+            <p class="auth-kicker">Welcome Back</p>
+            <h1>Digital Approval Workflow</h1>
+            <p class="muted">Sign in to continue to your dashboard</p>
 
-        <form id="loginForm" class="form-grid">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" placeholder="you@example.com" required>
+            <form id="loginForm" class="form-grid auth-form">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" required>
 
-            <label for="password">Password</label>
-            <input id="password" name="password" type="password" placeholder="••••••••" required>
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" placeholder="••••••••" required>
 
-            <button type="submit">Login</button>
-            <p id="loginError" class="error" hidden></p>
-        </form>
+                <button type="submit">Login</button>
+                <p id="loginError" class="error" hidden></p>
+            </form>
 
-        <hr class="divider">
-
-        <h2>Create New Account</h2>
-        <form id="registerForm" class="form-grid">
-            <label for="firstName">First Name</label>
-            <input id="firstName" name="firstName" type="text" maxlength="100" required>
-
-            <label for="lastName">Last Name</label>
-            <input id="lastName" name="lastName" type="text" maxlength="100">
-
-            <label for="registerEmail">Email</label>
-            <input id="registerEmail" name="registerEmail" type="email" maxlength="150" required>
-
-            <label for="registerPassword">Password</label>
-            <input id="registerPassword" name="registerPassword" type="password" minlength="6" maxlength="100" required>
-
-            <button type="submit">Register</button>
-            <p id="registerSuccess" class="success" hidden></p>
-            <p id="registerError" class="error" hidden></p>
-        </form>
+            <div class="auth-switch">
+                <p class="muted">Don't have an account?</p>
+                <a class="link-button" href="/register.html">Register / Sign up</a>
+            </div>
+        </article>
     </section>
 </main>
 <script src="/script.js"></script>
