@@ -2,6 +2,7 @@ package com.example.digitalapproval.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +14,7 @@ import com.example.digitalapproval.entity.User;
 import com.example.digitalapproval.repository.RequestRepository;
 import com.example.digitalapproval.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class RequestService {
 
     private final RequestRepository requestRepository;
@@ -29,7 +27,8 @@ public class RequestService {
 
     @Transactional
     public RequestResponseDto createRequest(RequestCreateDto requestDto) {
-        User user = userRepository.findById(requestDto.userId())
+        Long userId = Objects.requireNonNull(requestDto.userId(), "User id is required");
+        User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + requestDto.userId()));
 
         Request request = new Request();
@@ -76,7 +75,8 @@ public class RequestService {
     }
 
     private Request getRequestOrThrow(Long requestId) {
-        return requestRepository.findById(requestId)
+        Long nonNullRequestId = Objects.requireNonNull(requestId, "Request id is required");
+        return requestRepository.findById(nonNullRequestId)
             .orElseThrow(() -> new IllegalArgumentException("Request not found with id: " + requestId));
     }
 

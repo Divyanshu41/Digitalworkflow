@@ -13,10 +13,7 @@ import com.example.digitalapproval.entity.Role;
 import com.example.digitalapproval.entity.User;
 import com.example.digitalapproval.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;

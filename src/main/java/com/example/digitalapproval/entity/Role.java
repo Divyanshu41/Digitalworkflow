@@ -13,20 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@ToString(exclude = "users")
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -45,9 +32,8 @@ public class Role {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Builder.Default
     @OneToMany(mappedBy = "role")
-    private List<User> users = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
 
     public String getName() {
         return name;

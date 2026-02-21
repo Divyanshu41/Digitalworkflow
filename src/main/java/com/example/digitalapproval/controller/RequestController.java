@@ -19,11 +19,9 @@ import com.example.digitalapproval.dto.RequestResponseDto;
 import com.example.digitalapproval.service.RequestService;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/requests")
-@RequiredArgsConstructor
 public class RequestController {
 
     private final RequestService requestService;
