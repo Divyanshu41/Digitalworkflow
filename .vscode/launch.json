@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-DigitalApprovalWorkflowSystemApplication<digital-approval-workflow-system>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.digitalapproval.DigitalApprovalWorkflowSystemApplication",
+            "projectName": "digital-approval-workflow-system",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

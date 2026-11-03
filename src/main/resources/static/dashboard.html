@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Approval Workflow - Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <h1>Dashboard</h1>
+        <p id="userInfo" class="muted"></p>
+    </div>
+    <button id="logoutBtn" class="secondary">Logout</button>
+</header>
+
+<main class="container">
+    <section id="createSection" class="card" hidden>
+        <h2>Create Request</h2>
+        <form id="createForm" class="form-grid">
+            <label for="title">Title</label>
+            <input id="title" name="title" type="text" maxlength="150" required>
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description" maxlength="2000" rows="4"></textarea>
+
+            <button type="submit">Submit Request</button>
+            <p id="createSuccess" class="success" hidden>Request submitted successfully.</p>
+            <p id="createError" class="error" hidden></p>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2 id="tableTitle">Requests</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Submitted At</th>
+                    <th>User ID</th>
+                    <th>Remarks</th>
+                    <th id="actionHeader" hidden>Action</th>
+                </tr>
+                </thead>
+                <tbody id="requestsBody">
+                <tr><td colspan="8">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<script src="/script.js"></script>
+</body>
+</html>

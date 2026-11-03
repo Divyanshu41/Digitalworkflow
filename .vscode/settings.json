@@ -1,0 +1,13 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.jdt.ls.java.home": "C:/Users/CFIN/AppData/Roaming/Code/User/globalStorage/pleiades.java-extension-pack-jdk/java/25",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-25",
+            "path": "C:/Users/CFIN/AppData/Roaming/Code/User/globalStorage/pleiades.java-extension-pack-jdk/java/25",
+            "default": true
+        }
+    ]
+}

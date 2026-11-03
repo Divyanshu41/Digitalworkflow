@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Approval Workflow - Login</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="container auth-container">
+    <section class="auth-stack">
+        <article class="card auth-panel">
+            <p class="auth-kicker">Welcome Back</p>
+            <h1>Digital Approval Workflow</h1>
+            <p class="muted">Sign in to continue to your dashboard</p>
+
+            <form id="loginForm" class="form-grid auth-form">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" required>
+
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" placeholder="••••••••" required>
+
+                <button type="submit">Login</button>
+                <p id="loginError" class="error" hidden></p>
+            </form>
+
+            <div class="auth-switch">
+                <p class="muted">Don't have an account?</p>
+                <a class="link-button" href="/register.html">Register / Sign up</a>
+            </div>
+        </article>
+    </section>
+</main>
+<script src="/script.js"></script>
+</body>
+</html>
