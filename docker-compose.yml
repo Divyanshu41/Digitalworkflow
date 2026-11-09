@@ -15,7 +15,7 @@ services:
       retries: 10
 
   app:
-    build: .
+    image: divyanshu41/digital-approval-workflow:latest
     container_name: approval-app
     restart: always
     ports:
