@@ -29,7 +29,6 @@ public class RequestService {
         this.userRepository = userRepository;
     }
 
-    // Create request using the logged-in user's identity
     @Transactional
     public RequestResponseDto createRequest(
             RequestCreateDto requestDto,
@@ -48,28 +47,35 @@ public class RequestService {
         return mapToResponse(savedRequest);
     }
 
-    // ADMIN gets all requests; other permitted users get only their own
+    // ADMIN and APPROVER can view all requests.
+    // USER can view only their own requests.
     @Transactional(readOnly = true)
     public List<RequestResponseDto> getRequestsForCurrentUser(
             Authentication authentication) {
 
-        if (hasRole(authentication, "ADMIN")) {
+        if (hasRole(authentication, "ADMIN")
+                || hasRole(authentication, "APPROVER")) {
+
             return requestRepository.findAllByOrderBySubmittedAtDesc()
                     .stream()
                     .map(this::mapToResponse)
                     .toList();
         }
 
-        User user = getLoggedInUser(authentication);
+        if (hasRole(authentication, "USER")) {
+            User user = getLoggedInUser(authentication);
 
-        return requestRepository
-                .findByUser_IdOrderBySubmittedAtDesc(user.getId())
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+            return requestRepository
+                    .findByUser_IdOrderBySubmittedAtDesc(user.getId())
+                    .stream()
+                    .map(this::mapToResponse)
+                    .toList();
+        }
+
+        throw new AccessDeniedException("You cannot view requests");
     }
 
-    // APPROVER and ADMIN can view pending requests
+    // APPROVER and ADMIN can view pending requests.
     @Transactional(readOnly = true)
     public List<RequestResponseDto> getPendingRequests() {
         return requestRepository
@@ -113,6 +119,7 @@ public class RequestService {
 
     private boolean hasRole(Authentication authentication, String role) {
         return authentication != null
+                && authentication.isAuthenticated()
                 && authentication.getAuthorities().stream()
                 .anyMatch(authority ->
                         authority.getAuthority().equals("ROLE_" + role));

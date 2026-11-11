@@ -327,7 +327,7 @@
                 el.hidden = true;
             });
         } else if (role === 'APPROVER') {
-            tableTitle.textContent = 'Pending Requests';
+            tableTitle.textContent = 'All Requests & Approval History';
             actionHeader.hidden = false;
         } else if (role === 'ADMIN') {
             tableTitle.textContent = 'All Requests';
@@ -465,8 +465,13 @@
                 `;
 
                 if (role === 'APPROVER') {
-                    tr.querySelector('.action-cell')
-                        .appendChild(createActionCell(request, loadRequests));
+                    const actionCell = tr.querySelector('.action-cell');
+
+                    if (getStatus(request) === 'PENDING') {
+                        actionCell.appendChild(createActionCell(request, loadRequests));
+                    } else {
+                        actionCell.textContent = 'Decision recorded';
+                    }
                 }
 
                 if (role === 'USER') {
@@ -487,11 +492,7 @@
             try {
                 let requests;
 
-                if (role === 'APPROVER') {
-                    requests = await api('/requests/pending');
-                } else {
-                    requests = await api('/requests');
-                }
+                requests = await api('/requests');
 
                 if (!Array.isArray(requests)) {
                     throw new Error('Unexpected response from server');
