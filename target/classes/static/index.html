@@ -3,35 +3,260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Approval Workflow - Login</title>
+    <meta name="theme-color" content="#101b34">
+    <meta name="description" content="Digital Approval Workflow — manage requests, approvals and decisions in one secure workspace.">
+    <title>Digital Approval Workflow | Sign in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
+    <style>
+        :root {
+            --auth-ink: #17233d;
+            --auth-muted: #78849b;
+            --auth-blue: #4268e8;
+            --auth-border: #e7ebf3;
+        }
+        body.auth-page {
+            min-height: 100vh;
+            margin: 0;
+            color: var(--auth-ink);
+            font-family: "DM Sans", "Segoe UI", sans-serif;
+            background: #f6f8fc;
+        }
+        .auth-shell {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: minmax(360px, 1.02fr) minmax(420px, .98fr);
+        }
+        .auth-visual {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: clamp(30px, 5vw, 70px);
+            color: #fff;
+            background:
+                radial-gradient(circle at 82% 18%, rgba(105,143,255,.32), transparent 31%),
+                radial-gradient(circle at 8% 92%, rgba(60,102,227,.30), transparent 34%),
+                linear-gradient(145deg, #111d37 0%, #17294d 54%, #203d77 100%);
+        }
+        .auth-visual::before, .auth-visual::after {
+            content: "";
+            position: absolute;
+            border: 1px solid rgba(255,255,255,.09);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .auth-visual::before { width: 560px; height: 560px; right: -235px; top: 12%; }
+        .auth-visual::after { width: 420px; height: 420px; right: -165px; top: 22%; }
+        .auth-brand, .auth-visual-copy, .auth-visual-footer { position: relative; z-index: 1; }
+        .auth-brand { display: flex; align-items: center; gap: 13px; }
+        .auth-brand-mark {
+            width: 45px; height: 45px; display: grid; place-items: center;
+            border-radius: 14px; background: linear-gradient(145deg,#6488ff,#3457ce);
+            box-shadow: 0 10px 25px rgba(0,0,0,.18);
+        }
+        .auth-brand-mark svg { width: 24px; height: 24px; }
+        .auth-brand-name { font: 800 15px "Manrope",sans-serif; letter-spacing: -.25px; }
+        .auth-brand-sub { margin-top: 3px; color: #aab9d9; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; }
+        .auth-visual-copy { max-width: 560px; margin: 60px 0; }
+        .auth-eyebrow {
+            display: inline-flex; align-items: center; gap: 9px; margin: 0 0 22px;
+            color: #bdccf7; font-size: 11px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase;
+        }
+        .auth-eyebrow::before { content: ""; width: 24px; height: 1px; background: #8ea9ff; }
+        .auth-visual-copy h1 {
+            max-width: 540px; margin: 0; color: #fff;
+            font: 800 clamp(36px,4.5vw,61px)/1.12 "Manrope",sans-serif; letter-spacing: -2.6px;
+        }
+        .auth-visual-copy h1 span { color: #91aaff; }
+        .auth-visual-copy > p { max-width: 430px; margin: 23px 0 0; color: #b8c5df; font-size: 15px; line-height: 1.8; }
+        .auth-feature-list { display: grid; gap: 15px; margin-top: 35px; }
+        .auth-feature { display: flex; align-items: center; gap: 12px; color: #e4eaf8; font-size: 13px; }
+        .auth-feature-icon {
+            display: grid; place-items: center; width: 27px; height: 27px; flex: 0 0 27px;
+            border: 1px solid rgba(160,184,255,.28); border-radius: 9px; color: #a9bdff; background: rgba(255,255,255,.06);
+        }
+        .auth-feature-icon svg { width: 14px; height: 14px; }
+        .auth-visual-footer { display: flex; justify-content: space-between; gap: 18px; color: #96a8cb; font-size: 11px; }
+        .auth-visual-footer span:last-child { text-align: right; }
+        .auth-form-side { display: grid; place-items: center; padding: 44px clamp(24px,5vw,76px); background: #fff; }
+        .auth-form-wrap { width: 100%; max-width: 420px; }
+        .auth-mobile-brand { display: none; }
+        .auth-form-heading { margin-bottom: 34px; }
+        .auth-form-heading .auth-step { color: var(--auth-blue); font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+        .auth-form-heading h2 { margin: 12px 0 9px; color: var(--auth-ink); font: 800 31px "Manrope",sans-serif; letter-spacing: -1.1px; }
+        .auth-form-heading p { margin: 0; color: var(--auth-muted); font-size: 13px; line-height: 1.7; }
+        .auth-form { display: grid; gap: 9px; margin: 0; }
+        .auth-form label { margin-top: 9px; color: #35435d; font-size: 12px; font-weight: 700; }
+        .auth-input-wrap { position: relative; }
+        .auth-input-wrap input {
+            width: 100%; height: 49px; margin: 0; padding: 0 44px 0 15px;
+            border: 1px solid var(--auth-border); border-radius: 10px; outline: none;
+            color: #1d2b45; background: #fbfcff; font: 13px "DM Sans",sans-serif;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        .auth-input-wrap input::placeholder { color: #a6afbf; }
+        .auth-input-wrap input:focus { border-color: #7894f2; background: #fff; box-shadow: 0 0 0 4px rgba(66,104,232,.10); }
+        .auth-input-icon {
+            position: absolute; top: 50%; right: 15px; transform: translateY(-50%);
+            display: grid; place-items: center; color: #9ba6b8; pointer-events: none;
+        }
+        .auth-input-icon svg { width: 17px; height: 17px; }
+        .auth-password-toggle {
+            position: absolute; top: 50%; right: 10px; transform: translateY(-50%);
+            width: 30px; height: 30px; display: grid; place-items: center; padding: 0;
+            border: 0; border-radius: 7px; color: #8995a9; background: transparent;
+        }
+        .auth-password-toggle:hover { color: var(--auth-blue); background: #eff3ff; }
+        .auth-password-toggle svg { width: 17px; height: 17px; }
+        .auth-form button[type="submit"] {
+            height: 49px; margin-top: 17px; border: 0; border-radius: 10px;
+            color: #fff; background: linear-gradient(100deg,#4168e8,#3458d3);
+            box-shadow: 0 9px 18px rgba(65,104,232,.19); font: 700 13px "DM Sans",sans-serif;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .auth-form button[type="submit"]:hover { background: linear-gradient(100deg,#365ddd,#294bc2); box-shadow: 0 11px 21px rgba(65,104,232,.25); transform: translateY(-1px); }
+        .auth-form button[type="submit"]:disabled { cursor: wait; opacity: .7; transform: none; }
+        .auth-error {
+            margin: 7px 0 0; padding: 11px 12px; border: 1px solid #f4d5d5; border-radius: 9px;
+            color: #b63d3d; background: #fff7f7; font-size: 12px; line-height: 1.5;
+        }
+        .auth-switch { margin-top: 26px; padding-top: 23px; border-top: 1px solid #edf0f5; text-align: center; }
+        .auth-switch p { margin: 0 0 12px; color: #8994a6; font-size: 12px; }
+        .auth-switch .link-button {
+            display: inline-flex; align-items: center; justify-content: center; min-height: 43px; width: 100%;
+            border: 1px solid #dfe5f0; border-radius: 9px; color: #3859c6; background: #fff;
+            text-decoration: none; font-size: 12px; font-weight: 700; transition: .2s;
+        }
+        .auth-switch .link-button:hover { border-color: #aebef7; background: #f7f9ff; }
+        .auth-security-note { display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 25px; color: #9aa4b4; font-size: 10px; }
+        .auth-security-note svg { width: 13px; height: 13px; color: #6e9d84; }
+        .auth-form-side:focus-within .auth-form-heading { }
+        @media (max-width: 850px) {
+            .auth-shell { grid-template-columns: 1fr; }
+            .auth-visual { display: none; }
+            .auth-form-side { min-height: 100vh; padding: 38px 24px; background: linear-gradient(145deg,#f5f7fc,#fff 45%); }
+            .auth-form-wrap { max-width: 430px; padding: 33px 28px; border: 1px solid #edf0f6; border-radius: 18px; background: #fff; box-shadow: 0 18px 55px rgba(22,39,75,.07); }
+            .auth-mobile-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 36px; }
+            .auth-mobile-brand .auth-brand-mark { width: 39px; height: 39px; border-radius: 12px; }
+            .auth-mobile-brand .auth-brand-name { color: #192844; }
+            .auth-mobile-brand .auth-brand-sub { color: #8995a8; }
+        }
+        @media (max-width: 480px) {
+            .auth-form-side { padding: 18px 14px; }
+            .auth-form-wrap { padding: 26px 20px; border-radius: 15px; }
+            .auth-form-heading { margin-bottom: 25px; }
+            .auth-form-heading h2 { font-size: 27px; }
+        }
+    </style>
 </head>
-<body>
-<main class="container auth-container">
-    <section class="auth-stack">
-        <article class="card auth-panel">
-            <p class="auth-kicker">Welcome Back</p>
-            <h1>Digital Approval Workflow</h1>
-            <p class="muted">Sign in to continue to your dashboard</p>
+<body class="auth-page">
+<main class="auth-shell">
+    <section class="auth-visual" aria-label="About Digital Approval Workflow">
+        <div class="auth-brand">
+            <div class="auth-brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6 12.5 10 16l8-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2.8 20 6v5.3c0 4.8-3.2 8.1-8 9.9-4.8-1.8-8-5.1-8-9.9V6l8-3.2Z" stroke="white" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+                <div class="auth-brand-name">Digital Approval</div>
+                <div class="auth-brand-sub">Workflow System</div>
+            </div>
+        </div>
 
-            <form id="loginForm" class="form-grid auth-form">
-                <label for="email">Email</label>
-                <input id="email" name="email" type="email" placeholder="you@example.com" required>
+        <div class="auth-visual-copy">
+            <p class="auth-eyebrow">A smarter way to get things done</p>
+            <h1>Approvals, without the <span>back-and-forth.</span></h1>
+            <p>Bring every request, decision and update into one organised workspace. Move work forward with clarity and confidence.</p>
+            <div class="auth-feature-list">
+                <div class="auth-feature">
+                    <span class="auth-feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    Simple, streamlined request management
+                </div>
+                <div class="auth-feature">
+                    <span class="auth-feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                    Clear decisions and approval tracking
+                </div>
+                <div class="auth-feature">
+                    <span class="auth-feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h16M8 15l3-4 3 2 5-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    One place to follow workflow progress
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-visual-footer">
+            <span>Digital Approval Workflow System</span>
+            <span>One workspace. Clear decisions.</span>
+        </div>
+    </section>
+
+    <section class="auth-form-side">
+        <div class="auth-form-wrap">
+            <div class="auth-mobile-brand">
+                <div class="auth-brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M6 12.5 10 16l8-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2.8 20 6v5.3c0 4.8-3.2 8.1-8 9.9-4.8-1.8-8-5.1-8-9.9V6l8-3.2Z" stroke="white" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                </div>
+                <div>
+                    <div class="auth-brand-name">Digital Approval</div>
+                    <div class="auth-brand-sub">Workflow System</div>
+                </div>
+            </div>
+
+            <header class="auth-form-heading">
+                <span class="auth-step">Welcome back</span>
+                <h2>Sign in to your account</h2>
+                <p>Enter your work email and password to access your approval workspace.</p>
+            </header>
+
+            <form id="loginForm" class="auth-form" novalidate>
+                <label for="email">Email address</label>
+                <div class="auth-input-wrap">
+                    <input id="email" name="email" type="email" placeholder="name@company.com" autocomplete="username" required>
+                    <span class="auth-input-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </div>
 
                 <label for="password">Password</label>
-                <input id="password" name="password" type="password" placeholder="••••••••" required>
+                <div class="auth-input-wrap">
+                    <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+                    <button class="auth-password-toggle" type="button" id="togglePassword" aria-label="Show password" aria-pressed="false">
+                        <svg id="eyeIcon" viewBox="0 0 24 24" fill="none"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="2.7" stroke="currentColor" stroke-width="1.7"/></svg>
+                    </button>
+                </div>
 
-                <button type="submit">Login</button>
-                <p id="loginError" class="error" hidden></p>
+                <button type="submit" id="loginSubmit">Sign in <span aria-hidden="true">→</span></button>
+                <p id="loginError" class="auth-error" role="alert" hidden></p>
             </form>
 
             <div class="auth-switch">
-                <p class="muted">Don't have an account?</p>
-                <a class="link-button" href="/register.html">Register / Sign up</a>
+                <p>New to Digital Approval?</p>
+                <a class="link-button" href="/register.html">Create an account</a>
             </div>
-        </article>
+
+            <div class="auth-security-note">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 3 19 6v5c0 4.1-2.7 7.2-7 9-4.3-1.8-7-4.9-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Secure access to your workspace
+            </div>
+        </div>
     </section>
 </main>
+
 <script src="/script.js"></script>
+<script>
+    (() => {
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+
+        togglePassword.addEventListener('click', () => {
+            const visible = passwordInput.type === 'password';
+            passwordInput.type = visible ? 'text' : 'password';
+            togglePassword.setAttribute('aria-label', visible ? 'Hide password' : 'Show password');
+            togglePassword.setAttribute('aria-pressed', String(visible));
+        });
+    })();
+</script>
 </body>
 </html>
