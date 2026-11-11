@@ -1,9 +1,11 @@
+
 package com.example.digitalapproval.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,16 +22,20 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
 
-    public RequestService(RequestRepository requestRepository, UserRepository userRepository) {
+    public RequestService(
+            RequestRepository requestRepository,
+            UserRepository userRepository) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
     }
 
+    // Create request using the logged-in user's identity
     @Transactional
-    public RequestResponseDto createRequest(RequestCreateDto requestDto) {
-        Long userId = Objects.requireNonNull(requestDto.userId(), "User id is required");
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + requestDto.userId()));
+    public RequestResponseDto createRequest(
+            RequestCreateDto requestDto,
+            Authentication authentication) {
+
+        User user = getLoggedInUser(authentication);
 
         Request request = new Request();
         request.setUser(user);
@@ -42,53 +48,99 @@ public class RequestService {
         return mapToResponse(savedRequest);
     }
 
+    // ADMIN gets all requests; other permitted users get only their own
     @Transactional(readOnly = true)
-    public List<RequestResponseDto> getAllRequests() {
-        return requestRepository.findAll().stream()
-            .map(this::mapToResponse)
-            .toList();
+    public List<RequestResponseDto> getRequestsForCurrentUser(
+            Authentication authentication) {
+
+        if (hasRole(authentication, "ADMIN")) {
+            return requestRepository.findAllByOrderBySubmittedAtDesc()
+                    .stream()
+                    .map(this::mapToResponse)
+                    .toList();
+        }
+
+        User user = getLoggedInUser(authentication);
+
+        return requestRepository
+                .findByUser_IdOrderBySubmittedAtDesc(user.getId())
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
+    // APPROVER and ADMIN can view pending requests
     @Transactional(readOnly = true)
     public List<RequestResponseDto> getPendingRequests() {
-        return requestRepository.findByStatus("PENDING").stream()
-            .map(this::mapToResponse)
-            .toList();
+        return requestRepository
+                .findByStatusOrderBySubmittedAtDesc("PENDING")
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     @Transactional
     public RequestResponseDto approveRequest(Long requestId, String remarks) {
-        Request request = getRequestOrThrow(requestId);
+        Request request = getPendingRequestOrThrow(requestId);
+
         request.setStatus("APPROVED");
         request.setRemarks(remarks);
-        Request savedRequest = requestRepository.save(request);
-        return mapToResponse(savedRequest);
+
+        return mapToResponse(requestRepository.save(request));
     }
 
     @Transactional
     public RequestResponseDto rejectRequest(Long requestId, String remarks) {
-        Request request = getRequestOrThrow(requestId);
+        Request request = getPendingRequestOrThrow(requestId);
+
         request.setStatus("REJECTED");
         request.setRemarks(remarks);
-        Request savedRequest = requestRepository.save(request);
-        return mapToResponse(savedRequest);
+
+        return mapToResponse(requestRepository.save(request));
     }
 
-    private Request getRequestOrThrow(Long requestId) {
-        Long nonNullRequestId = Objects.requireNonNull(requestId, "Request id is required");
-        return requestRepository.findById(nonNullRequestId)
-            .orElseThrow(() -> new IllegalArgumentException("Request not found with id: " + requestId));
+    private User getLoggedInUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AccessDeniedException("User is not authenticated");
+        }
+
+        String email = authentication.getName();
+
+        return userRepository.findByEmailWithRole(email)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Logged-in user not found"));
+    }
+
+    private boolean hasRole(Authentication authentication, String role) {
+        return authentication != null
+                && authentication.getAuthorities().stream()
+                .anyMatch(authority ->
+                        authority.getAuthority().equals("ROLE_" + role));
+    }
+
+    private Request getPendingRequestOrThrow(Long requestId) {
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Request not found with id: " + requestId));
+
+        if (!"PENDING".equalsIgnoreCase(request.getStatus())) {
+            throw new IllegalStateException(
+                    "Only PENDING requests can be approved or rejected");
+        }
+
+        return request;
     }
 
     private RequestResponseDto mapToResponse(Request request) {
         return new RequestResponseDto(
-            request.getId(),
-            request.getTitle(),
-            request.getDescription(),
-            request.getStatus(),
-            request.getRemarks(),
-            request.getSubmittedAt(),
-            request.getUser().getId()
+                request.getId(),
+                request.getTitle(),
+                request.getDescription(),
+                request.getStatus(),
+                request.getRemarks(),
+                request.getSubmittedAt(),
+                request.getUser().getId()
         );
     }
 }
