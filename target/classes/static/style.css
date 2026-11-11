@@ -782,3 +782,84 @@ button {
         grid-template-columns: 1fr;
     }
 }
+
+/* =========================================
+   PHASE 4 - DATE FILTERS AND SORTING
+========================================= */
+
+.filter-controls {
+    display: flex;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.filter-controls label {
+    display: grid;
+    gap: 6px;
+    color: #657187;
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.filter-controls input,
+.filter-controls select {
+    min-height: 37px;
+    min-width: 130px;
+    padding: 8px 10px;
+    border: 1px solid #dfe5ef;
+    border-radius: 8px;
+    background: #fff;
+    color: #536078;
+    font-size: 12px;
+    outline: none;
+}
+
+.filter-controls input:focus,
+.filter-controls select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(49, 94, 232, .09);
+}
+
+.filter-controls button {
+    min-height: 37px;
+    white-space: nowrap;
+}
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+
+    .filter-controls {
+        width: 100%;
+    }
+
+    .filter-controls label {
+        flex: 1;
+        min-width: 130px;
+    }
+
+    .filter-controls input,
+    .filter-controls select {
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .filter-controls {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .filter-controls label {
+        min-width: 0;
+    }
+
+    .filter-controls button {
+        width: 100%;
+    }
+
+}

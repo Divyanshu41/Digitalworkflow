@@ -55,6 +55,9 @@ public class SecurityConfig {
                     "/favicon.ico"
                 ).permitAll()
 
+                .requestMatchers(HttpMethod.GET, "/requests/*")
+                    .hasAnyRole("USER", "APPROVER", "ADMIN")
+
                 // User registration
                 .requestMatchers(HttpMethod.POST, "/auth/register")
                     .permitAll()
