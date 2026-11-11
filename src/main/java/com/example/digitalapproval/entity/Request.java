@@ -1,3 +1,4 @@
+
 package com.example.digitalapproval.entity;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-@SuppressWarnings("unused")
+
 @Entity
 @Table(name = "requests")
 public class Request {
@@ -46,6 +47,14 @@ public class Request {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    // Phase 4: decision audit details
+    @Column(name = "decided_at")
+    private LocalDateTime decidedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "decided_by_user_id")
+    private User decidedBy;
 
     public Long getId() {
         return id;
@@ -97,5 +106,25 @@ public class Request {
 
     public void setSubmittedAt(LocalDateTime submittedAt) {
         this.submittedAt = submittedAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public LocalDateTime getDecidedAt() {
+        return decidedAt;
+    }
+
+    public void setDecidedAt(LocalDateTime decidedAt) {
+        this.decidedAt = decidedAt;
+    }
+
+    public User getDecidedBy() {
+        return decidedBy;
+    }
+
+    public void setDecidedBy(User decidedBy) {
+        this.decidedBy = decidedBy;
     }
 }

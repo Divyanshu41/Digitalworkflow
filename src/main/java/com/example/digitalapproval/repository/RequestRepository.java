@@ -1,8 +1,10 @@
 
 package com.example.digitalapproval.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,6 +24,21 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     List<Request> findAllByOrderBySubmittedAtDesc();
 
+    // Phase 4: date range filtering + role-specific scope + sorting
+    @Query("""
+        SELECT r
+        FROM Request r
+        WHERE (:userId IS NULL OR r.user.id = :userId)
+          AND (:fromDate IS NULL OR r.submittedAt >= :fromDate)
+          AND (:toDateExclusive IS NULL OR r.submittedAt < :toDateExclusive)
+    """)
+    List<Request> findFilteredRequests(
+            @Param("userId") Long userId,
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDateExclusive") LocalDateTime toDateExclusive,
+            Sort sort
+    );
+
     // Total requests
     @Query("""
         SELECT COUNT(r)
@@ -35,7 +52,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
         SELECT COUNT(r)
         FROM Request r
         WHERE r.status = :status
-        AND (:userId IS NULL OR r.user.id = :userId)
+          AND (:userId IS NULL OR r.user.id = :userId)
     """)
     long countRequestsByStatus(
             @Param("status") String status,

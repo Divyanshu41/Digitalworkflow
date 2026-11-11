@@ -242,11 +242,20 @@
         const tableTitle = $('tableTitle');
         const actionHeader = $('actionHeader');
 
+
         const searchInput = $('searchInput');
         const statusFilter = $('statusFilter');
+
+        const fromDateInput = $('fromDate');
+        const toDateInput = $('toDate');
+        const sortOrder = $('sortOrder');
+        const applyDateFilter = $('applyDateFilter');
+        const clearDateFilter = $('clearDateFilter');
+
         const pagination = $('pagination');
         const resultCount = $('resultCount');
         const paginationInfo = $('paginationInfo');
+
 
         const PAGE_SIZE = 5;
         let currentPage = 1;
@@ -484,40 +493,66 @@
             renderPagination(totalPages, filtered.length);
         };
 
-        // Load role-specific requests
-        const loadRequests = async () => {
-            requestsBody.innerHTML =
-                '<tr><td colspan="8" class="empty-cell">Loading requests...</td></tr>';
 
-            try {
-                let requests;
+// Phase 4: Load requests with date range and sorting
+const loadRequests = async () => {
 
-                requests = await api('/requests');
+    requestsBody.innerHTML =
+        '<tr><td colspan="8" class="empty-cell">Loading requests...</td></tr>';
 
-                if (!Array.isArray(requests)) {
-                    throw new Error('Unexpected response from server');
-                }
+    try {
 
-                // Existing API currently returns all requests.
-                // This client-side filter is for display only, not security.
-                if (role === 'USER') {
-                    requests = requests.filter(
-                        item => Number(item.userId) === Number(currentUser.id)
-                    );
-                }
+        const params = new URLSearchParams();
 
-                allRequests = requests;
-                currentPage = 1;
+        // From date
+        if (fromDateInput.value) {
+            params.set('fromDate', fromDateInput.value);
+        }
 
-                updateStats(allRequests);
-                renderTable();
+        // To date
+        if (toDateInput.value) {
+            params.set('toDate', toDateInput.value);
+        }
 
-            } catch (error) {
-                requestsBody.innerHTML =
-                    `<tr><td colspan="8" class="empty-cell">${escapeHtml(error.message || 'Unable to load data')}</td></tr>`;
-                updateStats([]);
-            }
-        };
+        // Sorting
+        params.set('sort', sortOrder.value);
+
+        const queryString = params.toString();
+
+        const url = queryString
+            ? `/requests?${queryString}`
+            : '/requests';
+
+        let requests = await api(url);
+
+        if (!Array.isArray(requests)) {
+            throw new Error('Unexpected response from server');
+        }
+
+        // USER sees only their own requests.
+        // Backend also enforces this access restriction.
+        if (role === 'USER') {
+            requests = requests.filter(
+                item => Number(item.userId) === Number(currentUser.id)
+            );
+        }
+
+        allRequests = requests;
+        currentPage = 1;
+
+        updateStats(allRequests);
+        renderTable();
+
+    } catch (error) {
+
+        requestsBody.innerHTML =
+            `<tr><td colspan="8" class="empty-cell">
+                ${escapeHtml(error.message || 'Unable to load data')}
+            </td></tr>`;
+
+        updateStats([]);
+    }
+};
 
         searchInput.addEventListener('input', () => {
             currentPage = 1;
@@ -530,6 +565,38 @@
         });
 
         $('refreshBtn').addEventListener('click', loadRequests);
+
+
+// Phase 4: Apply date filter and sorting
+applyDateFilter.addEventListener('click', async () => {
+
+    if (
+        fromDateInput.value &&
+        toDateInput.value &&
+        fromDateInput.value > toDateInput.value
+    ) {
+        alert('From Date cannot be after To Date.');
+        return;
+    }
+
+    await loadRequests();
+});
+
+// Phase 4: Clear all date filters
+clearDateFilter.addEventListener('click', async () => {
+
+    fromDateInput.value = '';
+    toDateInput.value = '';
+    sortOrder.value = 'latest';
+
+    await loadRequests();
+});
+
+// Reset pagination when sorting changes
+sortOrder.addEventListener('change', async () => {
+    await loadRequests();
+});
+
 
         // Create request
         createForm.addEventListener('submit', async event => {

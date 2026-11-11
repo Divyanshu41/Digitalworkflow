@@ -1,84 +1,127 @@
+
 package com.example.digitalapproval.dto;
 
 import java.time.LocalDateTime;
 
 public class RequestResponseDto {
 
-        private Long id;
-        private String title;
-        private String description;
-        private String status;
-        private String remarks;
-        private LocalDateTime submittedAt;
-        private Long userId;
+    private Long id;
+    private String title;
+    private String description;
+    private String status;
+    private String remarks;
+    private LocalDateTime submittedAt;
+    private Long userId;
 
-        public RequestResponseDto() {
-        }
+    // Phase 4 audit fields
+    private LocalDateTime decidedAt;
+    private Long decidedById;
+    private String decidedByEmail;
 
-        public RequestResponseDto(Long id, String title, String description, String status, String remarks,
-                                                          LocalDateTime submittedAt, Long userId) {
-                this.id = id;
-                this.title = title;
-                this.description = description;
-                this.status = status;
-                this.remarks = remarks;
-                this.submittedAt = submittedAt;
-                this.userId = userId;
-        }
+    public RequestResponseDto() {
+    }
 
-        public Long getId() {
-                return id;
-        }
+    public RequestResponseDto(
+            Long id,
+            String title,
+            String description,
+            String status,
+            String remarks,
+            LocalDateTime submittedAt,
+            Long userId,
+            LocalDateTime decidedAt,
+            Long decidedById,
+            String decidedByEmail) {
 
-        public void setId(Long id) {
-                this.id = id;
-        }
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.remarks = remarks;
+        this.submittedAt = submittedAt;
+        this.userId = userId;
+        this.decidedAt = decidedAt;
+        this.decidedById = decidedById;
+        this.decidedByEmail = decidedByEmail;
+    }
 
-        public String getTitle() {
-                return title;
-        }
+    public Long getId() {
+        return id;
+    }
 
-        public void setTitle(String title) {
-                this.title = title;
-        }
+    public String getTitle() {
+        return title;
+    }
 
-        public String getDescription() {
-                return description;
-        }
+    public String getDescription() {
+        return description;
+    }
 
-        public void setDescription(String description) {
-                this.description = description;
-        }
+    public String getStatus() {
+        return status;
+    }
 
-        public String getStatus() {
-                return status;
-        }
+    public String getRemarks() {
+        return remarks;
+    }
 
-        public void setStatus(String status) {
-                this.status = status;
-        }
+    public LocalDateTime getSubmittedAt() {
+        return submittedAt;
+    }
 
-        public String getRemarks() {
-                return remarks;
-        }
+    public Long getUserId() {
+        return userId;
+    }
 
-        public void setRemarks(String remarks) {
-                this.remarks = remarks;
-        }
+    public LocalDateTime getDecidedAt() {
+        return decidedAt;
+    }
 
-        public LocalDateTime getSubmittedAt() {
-                return submittedAt;
-        }
+    public Long getDecidedById() {
+        return decidedById;
+    }
 
-        public void setSubmittedAt(LocalDateTime submittedAt) {
-                this.submittedAt = submittedAt;
-        }
+    public String getDecidedByEmail() {
+        return decidedByEmail;
+    }
 
-        public Long getUserId() {
-                return userId;
-        }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-        public void setUserId(Long userId) {
-                this.userId = userId;
-        }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public void setSubmittedAt(LocalDateTime submittedAt) {
+        this.submittedAt = submittedAt;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setDecidedAt(LocalDateTime decidedAt) {
+        this.decidedAt = decidedAt;
+    }
+
+    public void setDecidedById(Long decidedById) {
+        this.decidedById = decidedById;
+    }
+
+    public void setDecidedByEmail(String decidedByEmail) {
+        this.decidedByEmail = decidedByEmail;
+    }
 }
