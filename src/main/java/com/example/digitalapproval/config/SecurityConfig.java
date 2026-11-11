@@ -1,3 +1,4 @@
+
 package com.example.digitalapproval.config;
 
 import org.springframework.context.annotation.Bean;
@@ -27,34 +28,93 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-        HttpSecurity http,
-        DaoAuthenticationProvider authenticationProvider,
-        AuthenticationEntryPoint authenticationEntryPoint
+            HttpSecurity http,
+            DaoAuthenticationProvider authenticationProvider,
+            AuthenticationEntryPoint authenticationEntryPoint
     ) throws Exception {
+
         http
             .csrf(csrf -> csrf.disable())
+
             .authenticationProvider(authenticationProvider)
+
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/index.html", "/login.html", "/register.html", "/dashboard.html", "/style.css", "/script.js", "/css/**", "/js/**", "/error", "/favicon.ico").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
-                .requestMatchers(HttpMethod.POST, "/requests").hasRole("USER")
-                .requestMatchers(HttpMethod.GET, "/requests").hasAnyRole("USER", "APPROVER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/requests/pending").hasAnyRole("APPROVER", "ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/requests/*/approve").hasRole("APPROVER")
-                .requestMatchers(HttpMethod.PUT, "/requests/*/reject").hasRole("APPROVER")
-                .anyRequest().hasRole("ADMIN"))
-            .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
-            .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(authenticationEntryPoint));
+
+                // Public pages and static resources
+                .requestMatchers(
+                    "/",
+                    "/index.html",
+                    "/login.html",
+                    "/register.html",
+                    "/dashboard.html",
+                    "/style.css",
+                    "/script.js",
+                    "/css/**",
+                    "/js/**",
+                    "/error",
+                    "/favicon.ico"
+                ).permitAll()
+
+                // User registration
+                .requestMatchers(HttpMethod.POST, "/auth/register")
+                    .permitAll()
+
+                // Authenticated user profile
+                .requestMatchers(HttpMethod.GET, "/auth/me")
+                    .authenticated()
+
+                // Create request: USER only
+                .requestMatchers(HttpMethod.POST, "/requests")
+                    .hasRole("USER")
+
+                // Get requests
+                .requestMatchers(HttpMethod.GET, "/requests")
+                    .hasAnyRole("USER", "APPROVER", "ADMIN")
+
+                // Pending requests: APPROVER and ADMIN
+                .requestMatchers(HttpMethod.GET, "/requests/pending")
+                    .hasAnyRole("APPROVER", "ADMIN")
+
+                // Approve request: APPROVER only
+                .requestMatchers(HttpMethod.PUT, "/requests/*/approve")
+                    .hasRole("APPROVER")
+
+                // Reject request: APPROVER only
+                .requestMatchers(HttpMethod.PUT, "/requests/*/reject")
+                    .hasRole("APPROVER")
+
+                // Phase 3: Dashboard Analytics
+                .requestMatchers(HttpMethod.GET, "/api/analytics/**")
+                    .hasAnyRole("USER", "APPROVER", "ADMIN")
+
+                // All other endpoints: ADMIN only
+                .anyRequest()
+                    .hasRole("ADMIN")
+            )
+
+            .exceptionHandling(exception ->
+                exception.authenticationEntryPoint(authenticationEntryPoint)
+            )
+
+            .httpBasic(httpBasic ->
+                httpBasic.authenticationEntryPoint(authenticationEntryPoint)
+            );
+
         return http.build();
     }
 
     @Bean
     @SuppressWarnings("deprecation")
-    public DaoAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public DaoAuthenticationProvider authenticationProvider(
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder
+    ) {
+
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
+
         return provider;
     }
 
